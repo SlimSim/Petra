@@ -1,0 +1,20 @@
+{
+  "name": "Petra - Personal trainer!",
+  "short_name": "Petra",
+  "description": "This app will help you with your workouts! Simply start a workout and Petra will tell you what excercise to do and for how long.",
+  "version": "0.0.5.1",
+  "offline_enabled": true,
+  "manifest_version": 2,
+  "app": {
+    "background": {
+      "scripts": ["background.js"]
+    }
+  },
+  "permissions": [
+    "storage", "<all_urls>", "unlimitedStorage"
+  ],
+  "icons": {
+      "16": "assets/icons/icon16.png",
+      "128": "assets/icons/icon128.png"
+  }
+}

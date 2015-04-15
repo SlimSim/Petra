@@ -1,0 +1,340 @@
+/*
+    This is style for mostly mobile
+    standard width is 400px
+    table width is 966px
+
+*/
+
+body{
+  background-color: #FFC700;
+  font-family: sans-serif;
+  font-size: 15px;
+  padding: 0;
+  overflow-y: auto;
+  height: 100vh;
+}
+input[type="button"]{
+    background-color: #D2CC79;
+    border-color: #D2CC79;;
+}
+input{
+    min-width: 42px;
+    min-height: 42px;
+    font-size: 18px;
+    white-space: normal; /* makes linebreaks possible */
+}
+
+input[type="text"]{
+    background-color: #FFFBC6;
+    border-color: #FFFBC6;
+    font-size: 13px;
+}
+
+h1{
+    margin-top: 10px;
+    font-size: 2em;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+h2{
+    font-size: 1.4em;
+}
+
+input{
+    width: 100%;
+/*    margin: 5px 5 */
+
+    min-width: 42px;
+    min-height: 42px;
+}
+
+li input{
+    margin: 0;
+}
+
+li{
+    margin: 1vw;
+    padding: 5px;
+/*    background-color: lightgreen; */
+    border-width: 2px;
+    border-style: outset;
+}
+
+li:active{
+    border-style: inset;
+}
+
+span{
+    display: flex;
+}
+
+span *{
+    flex-shrink: 2
+}
+
+#newExcercise{
+    flex-shrink: 1;
+}
+
+div{
+    padding: 1vw;
+}
+
+.wClass{ /* double workout class */
+    background-color: #FDED4D;
+    background-color: #FFE27C;
+
+    border-color: #FFE27C;
+
+}
+.vClass{ /* single workout class */
+    background-color: #FEFF7C;
+    background-color: #FFE27C;
+    background-color: #FDED4D;
+    background-color: #FFED36;
+
+    border-color: #FFED36;
+}
+.sClass{ /* stretching workout class */
+    background-color: rgb(255, 255, 52);
+    background-color: #FEFF7C;
+    background-color: #FCFD8D;
+
+    border-color: #FCFD8D;
+}
+
+#todoItems{
+    text-align: -webkit-center;
+}
+
+#todoItems li{
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    max-width: 555px;
+}
+
+.workoutName{
+
+}
+
+.workoutTime{
+
+}
+
+.workoutDelete{
+    width: 4em;
+}
+
+.workoutDiv{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    text-align: right;
+
+}
+
+.excerciceList{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.workoutEx li:nth-child(odd), .workoutEx li:nth-child(even){
+    background-color: transparent;
+}
+
+.timeLeftDiv{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.timeLeftDiv p{
+    margin-right: 5px;
+}
+
+.single, .stretching{
+/*    margin-top: 4px; */
+    line-height: 19px;
+}
+
+.double{
+    margin-bottom: 8px;
+}
+
+.paragraph{
+  margin-bottom: 4px;
+}
+
+.btn {
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.428571429;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+
+.input-sm {
+  height: 30px;
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+
+.outerDialog{
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.innerDialog{
+  width: 600px;
+  padding: 10 15px;
+  background-color: gold;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 8px;
+}
+
+tr{
+  margin: 3px;
+}
+
+td{
+  margin: 2px;
+}
+
+.flexScroll{
+  flex: 1;
+  overflow-y: auto;
+}
+
+.flexCol{
+  display: flex;
+  flex-direction: column;
+}
+
+.flexRow{
+  display: flex;
+  flex-direction: row;
+}
+
+.almostFullHeight{
+  height: 90vh;
+}
+
+
+/*
+.workoutList li:nth-child(odd){
+    background-color: #FFE27C;
+}
+
+.workoutList li:nth-child(even){
+    background-color: #FDED4D;
+}
+*/
+
+
+/*
+// if phone (one column)
+li-grejjerna
+    margin: 2vw (precis som alla andra grejjer)
+*/
+/*
+Maby the phone layout should have different colurs for the different types
+of workouts, och markera olika pass med margin där också?
+*/
+
+
+
+
+/*
+// if tablet
+*/
+/* Too wide to support one column, set 2 columns */
+@media all and (min-width: 700px) {
+    #todoItems{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        max-width: 1143px;
+        padding: 0 1vw;
+        align-self: center;
+        margin-left: auto;
+        margin-right: auto;
+
+    }
+
+    #todoItems li{
+        margin: 0.5vw 0;
+        width: calc(47.25vw - 10px);
+    }
+}
+
+/* Too wide to support two columns, set 3 columns */
+@media all and (min-width: 1750px) {
+    #todoItems{
+        max-width: 1730px;
+    }
+}
+/* end */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

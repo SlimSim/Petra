@@ -1,0 +1,121 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Petra - Personal Trainer</title>
+  <meta name="viewport"
+    content="width=device-width,
+            initial-scale=1.0,
+            minimum-scale=1.0,
+            user-scalable=no">
+
+
+    <link rel="stylesheet" type="text/css" href="reset.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <script type="text/javascript" src="jquery-2.1.1.min.js"></script>
+
+    <script type="text/javascript" src="buy.js"></script>
+
+    <script type="text/javascript" src="script.js"></script>
+</head>
+
+
+
+
+<body data-href="tutorials-indexeddb-todo" class="article tutorial">
+    <div>
+        <h1 id="title">Welcome to Petra</h1>
+
+        <span style="flex-wrap: wrap;">
+            <div class="timeLeftDiv">
+                <p>Workout time left: </p>
+                <p id="workoutCounter" style="font-size: 24px;">0</p>
+            <!--    <p id="workoutCounterH" style="display: none;">0</p> -->
+            </div>
+            <div class="timeLeftDiv">
+                <p>Exercise time left: </p>
+                <p id="counter" style="font-size: 24px;">0</p>
+            </div>
+            <div class="timeLeftDiv">
+                <p>Current Workout: </p>
+                <p id="currentWorkout" style="font-size: 24px;">-</p>
+            </div>
+            <div class="timeLeftDiv">
+                <p>Current Exercise: </p>
+                <p id="currentExercise" style="font-size: 24px;">-</p>
+            </div>
+        </span>
+        <input
+            type="button"
+            id="stopExcersise"
+            value="Stop excercise"
+        />
+    </div>
+
+    <ul id="todoItems" class="workoutList"></ul>
+
+    <div>
+      <input
+        type="button"
+        id="donate"
+        value="Do you like Petra? Donate money or vote for new features here!"/>
+    </div>
+
+    <div style="display: flex;">
+        <input
+            type="text"
+            id="workName"
+            name="workName"
+            placeholder="Name of workout?"
+            style="flex-shrink: 2;" />
+        <input
+            type="text"
+            id="workout"
+            name="todo"
+            placeholder="Comma or dot separated exercises"/>
+
+    </div>
+    <div>
+    Add as:
+    <span>
+      <input
+        type="button"
+        value="Double workout"
+        id="addDoubleWorkoutButt"/>
+      <input
+        type="button"
+        value="Single workout"
+        id="addSingleWorkoutButt"/>
+      <input
+        type="button"
+        value="Stretching"
+        id="addStretchButt"/>
+
+    </span>
+    </div>
+
+
+    <div style="display: none" id="donateDialog" class="outerDialog">
+      <div class="innerDialog flexCol almostFullHeight">
+        <h2 class="paragraph">Donate to Petra</h2>
+        <p class="paragraph">
+          Petra is free and open source and if you like this app,
+          feel free to donate as much or little as you want!
+          Any contribution is greatly appreciated!
+        </p>
+        <p class="paragraph">
+          You can also vote for features you would like to see in the future!
+          If enough people pay for a certain feature it might become a reality...
+        </p>
+        <div class="flexScroll">
+          <table class="table table-striped">
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <p class="paragraph">You can donate and/or vote more than once.</p>
+        <input id="closeDonateDialog" type="button" value="Return" />
+      </div>
+    </div>
+</body>
+</html>
