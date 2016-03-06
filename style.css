@@ -103,6 +103,15 @@ div{
 
     border-color: #FCFD8D;
 }
+.aClass{
+    background-color: #DEFD8D;
+    border-color: #DEFD8D;
+}
+
+.edgeMargin {
+  margin: 8px;
+}
+
 
 #todoItems{
     text-align: -webkit-center;
@@ -306,35 +315,3 @@ of workouts, och markera olika pass med margin där också?
     }
 }
 /* end */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
