@@ -2,9 +2,6 @@ var G = {};
 G.WORKOUTS_ADDED = "workoutsAdded";
 G.BRUTAL_DOUBLE_WORKOUT = "Brutal Double Workout";
 G.LONG_STRETCH_ROUTINE = "Long Stretch Routine";
-G.tmpWorkout2 = "tmpWorkout2";
-G.tmpWorkout3 = "tmpWorkout3";
-G.tmpWorkout4 = "tmpWorkout4";
 
 G.DOUBLE_TYPE = "w";
 G.SIGNLE_TYPE = "v";
@@ -95,46 +92,7 @@ DB.checkIfMoreExcersisesNeadsToBeAdded = function(){
         console.log("add brutal double workout"); 
       }
 
-      /*
-      if( addedWorkouts.indexOf( G.tmpWorkout1 ) == -1 ) {
-        localAddWorkout(
-          G.SINGLE_TYPE, 
-          G.tmpWorkout1, 
-          "pasdfush ups, " +
-          "lungeasdfs, " +
-          "tricepasdfs dip on chair, " +
-          "crunches toasdf to left, " +
-          "back extensasdfions to right, " +
-          "back extensionasdfs to left, " +
-          "leg, " +
-          "back"
-        );
-        console.log("add tmpWorkout1"); 
-      }
-/*
-      if( addedWorkouts.indexOf( G.tmpWorkout2 ) == -1 ) {
-        localAddWorkout(
-          G.DOUBLE_TYPE, 
-          G.tmpWorkout2, 
-          "2222, " +
-          "BBB222, " +
-          "CCCC2222, " +
-          "DDDD22"
-        );
-        console.log("add tmpWorkout2"); 
-      }
-      if( addedWorkouts.indexOf( G.tmpWorkout3 ) == -1 ) {
-        localAddWorkout(
-          G.DOUBLE_TYPE, 
-          G.tmpWorkout3, 
-          "AA3, " +
-          "BBB3, " +
-          "CCCC3, " +
-          "DDDD3"
-        );
-        console.log("add tmpWorkout3"); 
-      }
-*/
+
 console.log("addedWorkouts", addedWorkouts );
       chrome.storage.local.set( {'workoutsAdded' : addedWorkouts } );
       
@@ -526,7 +484,7 @@ function renderTodo(row) {
                 $("<input>", {
                     'type':'button',
                     'value':'Delete',
-                    class: 'workoutDelete'
+                    class: 'btnSmallWidth'
                 })
                 .click(function(){
                   deleteClicked = true;
@@ -558,6 +516,7 @@ var PT = {};
 
 PT.bOn = false;
 PT.startWorkoutTimer = false;
+PT.bPlayMusic = true;
 
 /* standAlone Functions */
 PT.secToDisp = function(seconds){
@@ -574,7 +533,24 @@ G.DOUBLE_TYPE = "w";
 G.SIGNLE_TYPE = "v";
 G.QUICK_STRETCH_TYPE = "s";
 G.SERIOUS_STRETCH_TYPE = "a";
-  
+    
+    $( '#showPicker' ).children().click( function( event ) {
+      var $target = $( event.target );
+      if( $target === undefined ) return;
+      
+      $( '#showPicker' ).children().removeClass( 'selected' );
+      $target.addClass( 'selected' );
+      
+      $('#todoItems').removeClass(
+        "showAll showWorkout showStretch showWClass showVClass showSClass showAClass"
+      ).addClass( $target.attr("workoutType") );
+      
+      
+      
+
+
+      
+    });
     $('#stopExcersise').click(function(){
         PT.stopExcersise();
     });
@@ -605,13 +581,16 @@ PT.removeEx = function(rowTimeStamp){
 
 
 PT.stopExcersise = function(){
+  console.log("stopExercise");
     PT.clearCounter();
     PT.bOn = false;
     PT.speak("Exercise stopped", true);
     $('#currentExercise').text("-");
+    $('audio')[0].pause();
 };
 
 PT.clearCounter = function(){
+  console.log("clearCounter ->");
     if(PT.startWorkoutTimer) clearTimeout(PT.startWorkoutTimer);
     if(PT.countDownInterval) clearInterval(PT.countDownInterval);
 };
@@ -665,12 +644,10 @@ PT.countDown2 = function(aExcersice, index, callBackFunk){
                 PT.speak('30 seconds left');
                 break;
             case "10":
-                if(halfTime > 14 || bTense || bNextIsTense) PT.speak('10');
+                if( halfTime > 14 ) PT.speak('10');
                 break;
             case "5":
-                if(bTense || bNextIsTense)
-                    PT.speak("5");
-                else if(!bRest)
+                if(!bRest && !bTense && !bNextIsTense )
                     PT.speak('next up ' + nextExcersise );
                 break;
             case "0":
@@ -688,8 +665,15 @@ PT.countDown2 = function(aExcersice, index, callBackFunk){
     }, 1000);
 };
 
+
 var startRun = function(name, totalTime, aExcercise){
-    console.log("startRun");
+    $('audio').attr('src', "assets/music/workoutMusic1.mp3");
+    onVolumeUpdate( {target:$('#volume')[0]} );
+
+    if( PT.bPlayMusic ) {
+      $('audio')[0].play();
+    }
+
     PT.bOn = true;
     $('#currentWorkout').text(name);
     $('#workoutCounter')
@@ -710,6 +694,7 @@ var run = function(aExcercise, index){
     if(index == aExcercise.length) {
         PT.speak("Now we are free!");
         $('#currentExercise').text("Great work!");
+        $('audio')[0].pause();
         return;
     }
     var firstFrase;
@@ -822,7 +807,7 @@ IO.confirm = function(textHead, textBox, func, funcCancel){
   p.style.margin = "6px 0";
 
   document.body.appendChild(outerDiv);
-return;
+  return;
 };//end confirm
 
 
@@ -869,12 +854,35 @@ IO.keyboardKeydown  = function(event) {
 
 }; // end IO.keyboardKeydown *****************/
 
+var onVolumeUpdate = function( event ){
+    var volume = event.target.value;
+    $('#volumeDisplay').text(volume);
+    $('audio')[0].volume = volume/parseInt(event.target.max);
+};
+
+var toggleMusicOnOff = function( event ) {
+  if( PT.bPlayMusic ) {
+     PT.bPlayMusic = false;
+     event.target.classList.remove('btnOn');
+     $('audio')[0].pause();
+  } else {
+    PT.bPlayMusic = true;
+    event.target.classList.add('btnOn');
+    if( PT.bOn ) {
+      $('audio')[0].play();
+    }
+  }
+};
 
 $( document ).ready(function(){
-    console.log("ready");
     DB.indexedDB.open();
     PT.main();
     document.addEventListener('keydown', IO.keyboardKeydown);
+    
+    
+    $('#volume')[0].addEventListener('input', onVolumeUpdate);
+    $('#btnMusicOnOff').click(toggleMusicOnOff);
+    
 });
 
 //window.addEventListener("DOMContentLoaded", init, false);
