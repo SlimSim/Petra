@@ -14,7 +14,7 @@
 
     <script type="text/javascript" src="jquery-2.1.1.min.js"></script>
 
-    <script type="text/javascript" src="buy.js"></script>
+    <script type="text/javascript" src="assets/donate.js"></script>
 
     <script type="text/javascript" src="script.js"></script>
 </head>
@@ -25,6 +25,18 @@
 <body>
     <div>
         <h1 id="title">Welcome to Petra</h1>
+
+
+        <div class="infoSquare">
+          <span>
+            Petra is now available for Android! Get it 
+            <a 
+              target="_blank" 
+              href="https://play.google.com/store/apps/details?id=com.slimsimapps.petra">
+              here</a> 
+            and take your exercises with you anywhere you go!
+          </span>
+        </div>
 
         <span style="flex-wrap: wrap;">
             <div class="timeLeftDiv">
@@ -45,6 +57,23 @@
                 <p id="currentExercise" style="font-size: 24px;">-</p>
             </div>
         </span>
+        <div class="flexRow centerRow">
+          <input
+              type="button"
+              class="btnSmallWidth btnOn"
+              value="Music on/off"
+              id="btnMusicOnOff"
+          />
+          <div class="btnSmallWidth">Music volume:</div>
+          <h2 id="volumeDisplay" class="edgeMargin">4</h2>
+          <input 
+              type="range"
+              id="volume"
+              value="4"
+              min="0"
+              max="11"
+          />
+        </div>
         <input
             type="button"
             id="stopExcersise"
@@ -52,22 +81,24 @@
         />
     </div>
     
-    <div>
-      Petra is now available for Android! Get it 
-      <a 
-        target="_blank" 
-        href="https://play.google.com/store/apps/details?id=com.slimsimapps.petra">
-        here</a> 
-      and take your exercises with you anywhere you go!
+    <div class="flexRow" id="showPicker">
+      <input workoutType="showAll" class="selected" type=button value="All"/>
+      <input workoutType="showWorkout" type=button value="Workouts"/>
+      <input workoutType="showStretch" type=button value="Stretch"/>
+      <input workoutType="showWClass" type=button value="Double Workouts"/>
+      <input workoutType="showVClass" type=button value="Single Workouts"/>
+      <input workoutType="showAClass" type=button value="Serious stretch"/>
+      <input workoutType="showSClass" type=button value="Quick stretch"/>
     </div>
 
-    <ul id="todoItems" class="workoutList"></ul>
+
+    <ul id="todoItems" class="showAll"></ul>
 
     <div>
       <input
         type="button"
         id="donate"
-        value="Do you like Petra? Donate money or vote for new features here!"/>
+        value="Do you like Petra? Feel free to contribute here!!"/>
     </div>
 
     <h2 class="edgeMargin">Add new workout:</h2>
@@ -111,27 +142,11 @@
     </div>
 
 
-    <div style="display: none" id="donateDialog" class="outerDialog">
-      <div class="innerDialog flexCol almostFullHeight">
-        <h2 class="paragraph">Donate to Petra</h2>
-        <p class="paragraph">
-          Petra is free and open source and if you like this app,
-          feel free to donate as much or little as you want!
-          Any contribution is greatly appreciated!
-        </p>
-        <p class="paragraph">
-          You can also vote for features you would like to see in the future!
-          If enough people pay for a certain feature it might become a reality...
-        </p>
-        <div class="flexScroll">
-          <table class="table table-striped">
-            <tbody>
-            </tbody>
-          </table>
-        </div>
-        <p class="paragraph">You can donate and/or vote more than once.</p>
-        <input id="closeDonateDialog" type="button" value="Return" />
-      </div>
-    </div>
+
+
+
+
+    <audio style="display: none" src="" ></audio>
+    
 </body>
 </html>
