@@ -6,7 +6,7 @@
 */
 
 body{
-  background-color: #FFC700;
+  background-color: #FFC700; /* background-color, dark-yellow */
   font-family: sans-serif;
   font-size: 15px;
   padding: 0;
@@ -82,7 +82,6 @@ div{
 }
 
 .wClass{ /* double workout class */
-    background-color: #FDED4D;
     background-color: #FFE27C;
 
     border-color: #FFE27C;
@@ -118,22 +117,15 @@ div{
 }
 
 #todoItems li{
-    display: flex;
+/*    display: flex; */
     flex-direction: row-reverse;
     justify-content: space-between;
     max-width: 555px;
 }
 
-.workoutName{
-
-}
-
-.workoutTime{
-
-}
-
-.workoutDelete{
+.btnSmallWidth {
     width: 4em;
+    min-width: 3.3em;
 }
 
 .workoutDiv{
@@ -180,6 +172,10 @@ div{
   margin-bottom: 4px;
 }
 
+.centerRow{
+  align-items: center;
+}
+
 .btn {
   display: inline-block;
   margin-bottom: 0;
@@ -200,6 +196,7 @@ div{
   -o-user-select: none;
   user-select: none;
 }
+
 
 
 .input-sm {
@@ -281,8 +278,14 @@ li-grejjerna
 Maby the phone layout should have different colurs for the different types
 of workouts, och markera olika pass med margin där också?
 */
+#showPicker {
+  flex-wrap: wrap;
+  justify-content: center;
+}
 
-
+#showPicker input{
+  width: 160px;
+}
 
 
 /*
@@ -315,3 +318,101 @@ of workouts, och markera olika pass med margin där också?
     }
 }
 /* end */
+
+
+body {
+  background-color:   #FFC107;
+}
+
+.wClass { /* double workout class */
+    background-color: #FFA000;
+    border-color:     #FFA000;
+}
+.vClass { /* single workout class */
+    background-color: #FFB300;
+    border-color:     #FFB300;
+}
+.sClass { /* stretching workout class */
+    background-color: #FFD54F;
+    border-color:     #FFD54F;
+}
+.aClass {
+    background-color: #FDD835;
+    border-color:     #FFCA28;
+}
+
+.infoSquare {
+  display: flex;
+  justify-content: center;
+}
+
+.infoSquare span {
+  display: inline;
+  background-color: #FFD600;
+  padding: 10px 20px;
+  text-align: center;
+}
+
+#donate:hover {
+  border-color: #FFA000;
+  outline: solid 2px #FFA000;
+}
+
+#showPicker .selected {
+  background-color: #FFD600;
+  border-color: #FFD600;
+}
+
+.wClass, 
+.vClass,
+.sClass,
+.aClass {
+  display: none;
+}
+
+.showAll .wClass, 
+.showAll .vClass,
+.showAll .sClass,
+.showAll .aClass,
+.showWorkout .wClass,
+.showWorkout .vClass,
+.showStretch .sClass,
+.showStretch .aClass,
+.showWClass .wClass, 
+.showVClass .vClass,
+.showSClass .sClass,
+.showAClass .aClass {
+  
+  display: flex;
+}
+
+
+input[type="button"].btnOn {
+  background-color: #FFD600;
+  border-color: #FFD600;
+  border-style: inset;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
