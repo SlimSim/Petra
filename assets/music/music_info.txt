@@ -1,0 +1,5 @@
+This file needs to be here for github to continue to store and push the music-folder.
+
+It also includes the music-filenames that Petra will postulate exists in this folder:
+
+- workoutMusic1.mp3
