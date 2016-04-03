@@ -14,6 +14,10 @@ G.PAUSE = "Pause";
 G.STRETCH = "Stretch";
 G.SWITCH = "Switch";
 
+G.B_PLAY_MUSIC = "bPlayMusic";
+G.I_VOLUME = "iVolume";
+G.WORKOUT_TYPE = "workoutType";
+
 
 var DB = {};
 window.indexedDB = window.indexedDB || window.webkitIndexedDB ||
@@ -23,23 +27,11 @@ if ('webkitIndexedDB' in window) {
   window.IDBTransaction = window.webkitIDBTransaction;
   window.IDBKeyRange = window.webkitIDBKeyRange;
 }
-/*
-petra bruatl workout!
-jump squats, push ups,
-lunges, triceps dip on chair,
-crunches to right, crunches to left,
-back extensions to right, back extensions to left,
-leg raises, back extensions
-*/
-
-
-
 
 DB.indexedDB = {};
 
 DB.checkIfMoreExcersisesNeadsToBeAdded = function(){
   
-  console.log("calling local storage");
   chrome.storage.local.get( G.WORKOUTS_ADDED, function( resp ){
     function localAddWorkout( type, name, excersises) {
       reloadItems = true;
@@ -48,60 +40,52 @@ DB.checkIfMoreExcersisesNeadsToBeAdded = function(){
       var str = type + ":Name_Ex_Splitter:"
               + name + ":Name_Ex_Splitter:"
               + excersises;
-      console.log("addWorkout -> str", str);
       DB.indexedDB.addTodo(str, true);
     }
     var i,
-        reloadItems = false;
-    
-    console.log("addedWorkouts");
-    var addedWorkouts = resp[G.WORKOUTS_ADDED];
+        reloadItems = false,
+        addedWorkouts = resp[G.WORKOUTS_ADDED];
 
-    console.log("addedWorkouts", addedWorkouts );
-    
     if( addedWorkouts === undefined ) {
-      console.log("setting up workoutsAdded - array");
       chrome.storage.local.set( { 'workoutsAdded' : [] } );
-    } else {
-      if( addedWorkouts.indexOf( G.BRUTAL_DOUBLE_WORKOUT ) == -1 ) {
-        localAddWorkout(
-          G.DOUBLE_TYPE, 
-          G.BRUTAL_DOUBLE_WORKOUT, 
-          "jump squats, " +
-          "push ups, " +
-          "lunges, " +
-          "triceps dip on chair, " +
-          "crunches to right, " +
-          "crunches to left, " +
-          "back extensions to right, " +
-          "back extensions to left, " +
-          "leg raises, " +
-          "back extensions"
-        );
-        console.log("add brutal double workout"); 
-      }
-      if( addedWorkouts.indexOf( G.LONG_STRETCH_ROUTINE ) == -1 ) {
-        localAddWorkout(
-          G.SERIOUS_STRETCH_TYPE, 
-          G.LONG_STRETCH_ROUTINE, 
-          "Right chest, " +
-          "Left chest, " +
-          "Right butt, " +
-          "Left butt"
-        );
-        console.log("add brutal double workout"); 
-      }
+      addedWorkouts = [];
+    }
+    if( addedWorkouts.indexOf( G.BRUTAL_DOUBLE_WORKOUT ) == -1 ) {
+      localAddWorkout(
+        G.DOUBLE_TYPE, 
+        G.BRUTAL_DOUBLE_WORKOUT, 
+        "Jump squats, " +
+        "Push ups, " +
+        "Lunges, " +
+        "Triceps dip on chair, " +
+        "Crunches to right, " +
+        "Crunches to left, " +
+        "Back extensions to right, " +
+        "Back extensions to left, " +
+        "Leg raises, " +
+        "Back extensions"
+      );
 
+    }
+    if( addedWorkouts.indexOf( G.LONG_STRETCH_ROUTINE ) == -1 ) {
+      localAddWorkout(
+        G.SERIOUS_STRETCH_TYPE, 
+        G.LONG_STRETCH_ROUTINE, 
+        "Right chest, " +
+        "Left chest, " +
+        "Right butt, " +
+        "Left butt"
+      );
+    }
 
-console.log("addedWorkouts", addedWorkouts );
-      chrome.storage.local.set( {'workoutsAdded' : addedWorkouts } );
-      
-      if( reloadItems ) {
-        setTimeout(function(){
-          DB.indexedDB.getAllTodoItems();
-        }, 1000);
-      }
-    }// end else
+    chrome.storage.local.set( {'workoutsAdded' : addedWorkouts } );
+    
+    if( reloadItems ) {
+      setTimeout(function(){
+        DB.indexedDB.getAllTodoItems();
+      }, 1000);
+    }
+
   });
 };
 
@@ -120,7 +104,6 @@ DB.indexedDB.open = function() {
     var version = 1;
     var request = indexedDB.open("workoutsC", version);
     
-    console.log("request", request);
 
   // We can only create Object stores in a versionchange transaction.
   request.onupgradeneeded = function(e) {
@@ -238,7 +221,6 @@ DB.indexedDB.open = function() {
   request.onsuccess = function(e) {
     DB.indexedDB.db = e.target.result;
     DB.indexedDB.getAllTodoItems();
-    console.log("-> checkIfMoreExcersisesNeadsToBeAdded");
     DB.checkIfMoreExcersisesNeadsToBeAdded();
   };
 
@@ -246,7 +228,6 @@ DB.indexedDB.open = function() {
 };
 
 DB.indexedDB.addTodo = function(todoText, bSkippReloadTodoItems) {
-  console.log("addTodo -> todoText", todoText);
   var db = DB.indexedDB.db;
   var trans = db.transaction(["workout"], "readwrite");
   var store = trans.objectStore("workout");
@@ -286,7 +267,6 @@ DB.indexedDB.deleteTodo = function(id) {
 };
 
 DB.indexedDB.getAllTodoItems = function() {
-  console.log("getAllTodoItems ->");
   
   var todos = document.getElementById("todoItems");
   todos.innerHTML = "";
@@ -304,7 +284,6 @@ DB.indexedDB.getAllTodoItems = function() {
     if(!!result == false){
         return;
     }
-    console.log("result", result);
 
     renderTodo(result.value);
     result.continue();
@@ -488,7 +467,6 @@ function renderTodo(row) {
                 })
                 .click(function(){
                   deleteClicked = true;
-                  console.log("delete row.timeStamp=" + row.timeStamp);
                   PT.removeEx(row.timeStamp);
                 })
             )
@@ -518,6 +496,8 @@ PT.bOn = false;
 PT.startWorkoutTimer = false;
 PT.bPlayMusic = true;
 
+
+
 /* standAlone Functions */
 PT.secToDisp = function(seconds){
        var sec = ( seconds | 0 ) % 60;
@@ -528,14 +508,11 @@ PT.secToDisp = function(seconds){
 };
 
 PT.main = function(){
-  
-G.DOUBLE_TYPE = "w";
-G.SIGNLE_TYPE = "v";
-G.QUICK_STRETCH_TYPE = "s";
-G.SERIOUS_STRETCH_TYPE = "a";
+
     
     $( '#showPicker' ).children().click( function( event ) {
-      var $target = $( event.target );
+      var $target = $( event.target ),
+        o = {};
       if( $target === undefined ) return;
       
       $( '#showPicker' ).children().removeClass( 'selected' );
@@ -544,13 +521,10 @@ G.SERIOUS_STRETCH_TYPE = "a";
       $('#todoItems').removeClass(
         "showAll showWorkout showStretch showWClass showVClass showSClass showAClass"
       ).addClass( $target.attr("workoutType") );
-      
-      
-      
-
-
-      
+      o[ G.WORKOUT_TYPE ] = $target.attr("workoutType");
+      chrome.storage.local.set( o );
     });
+    
     $('#stopExcersise').click(function(){
         PT.stopExcersise();
     });
@@ -567,6 +541,28 @@ G.SERIOUS_STRETCH_TYPE = "a";
         addWorkout( G.SERIOUS_STRETCH_TYPE );
     });
     $('#contribute_0').click(PT.purchase);
+
+    
+    chrome.storage.local.get( G.WORKOUT_TYPE, function( resp ){
+      if( resp[ G.WORKOUT_TYPE ] !== undefined ) {
+        $(' [workouttype="' + resp[ G.WORKOUT_TYPE ] + '"] ' ).click();
+      }
+    });
+    
+    chrome.storage.local.get( G.B_PLAY_MUSIC, function( resp ){
+      if( resp[ G.B_PLAY_MUSIC ] !== undefined ) {
+        PT.bPlayMusic = resp[G.B_PLAY_MUSIC];
+        if( !PT.bPlayMusic )
+          $('#btnMusicOnOff').removeClass('btnOn');
+      }
+    });
+    chrome.storage.local.get( G.I_VOLUME, function( resp ){
+      if( resp[ G.I_VOLUME ] !== undefined ) {
+        $('#volume').val(resp[ G.I_VOLUME ]);
+        onVolumeUpdate( {target:$('#volume')[0]} );
+      }
+    });
+    
 };
 
 PT.removeEx = function(rowTimeStamp){
@@ -581,7 +577,6 @@ PT.removeEx = function(rowTimeStamp){
 
 
 PT.stopExcersise = function(){
-  console.log("stopExercise");
     PT.clearCounter();
     PT.bOn = false;
     PT.speak("Exercise stopped", true);
@@ -590,7 +585,6 @@ PT.stopExcersise = function(){
 };
 
 PT.clearCounter = function(){
-  console.log("clearCounter ->");
     if(PT.startWorkoutTimer) clearTimeout(PT.startWorkoutTimer);
     if(PT.countDownInterval) clearInterval(PT.countDownInterval);
 };
@@ -855,16 +849,23 @@ IO.keyboardKeydown  = function(event) {
 }; // end IO.keyboardKeydown *****************/
 
 var onVolumeUpdate = function( event ){
-    var volume = event.target.value;
+    var volume = event.target.value,
+      o = {};
     $('#volumeDisplay').text(volume);
     $('audio')[0].volume = volume/parseInt(event.target.max);
+    
+    o[ G.I_VOLUME ] = volume;
+    
+    chrome.storage.local.set( o );
 };
 
 var toggleMusicOnOff = function( event ) {
+  var o = {};
   if( PT.bPlayMusic ) {
-     PT.bPlayMusic = false;
-     event.target.classList.remove('btnOn');
-     $('audio')[0].pause();
+    
+    PT.bPlayMusic = false;
+    event.target.classList.remove('btnOn');
+    $('audio')[0].pause();
   } else {
     PT.bPlayMusic = true;
     event.target.classList.add('btnOn');
@@ -872,6 +873,8 @@ var toggleMusicOnOff = function( event ) {
       $('audio')[0].play();
     }
   }
+  o[ G.B_PLAY_MUSIC ] = PT.bPlayMusic;
+  chrome.storage.local.set( o );
 };
 
 $( document ).ready(function(){
