@@ -149,33 +149,33 @@ DB.indexedDB.open = function() {
     standardWorkout2 += ", Jump Squats";
     standardWorkout2 += ", push ups";
 
-    var standardStreatch1 = "s:Name_Ex_Splitter:";
-    standardStreatch1 += "Quick Stretch Routine:Name_Ex_Splitter:";
-    standardStreatch1 += "Right butt";
-    standardStreatch1 += ", left butt";
-    standardStreatch1 += ", right ancle";
-    standardStreatch1 += ", left ancle";
-    standardStreatch1 += ", right chest";
-    standardStreatch1 += ", left chest";
-    standardStreatch1 += ", Stomach";
-    standardStreatch1 += ", Back";
+    var standardStretch1 = "s:Name_Ex_Splitter:";
+    standardStretch1 += "Quick Stretch Routine:Name_Ex_Splitter:";
+    standardStretch1 += "Right butt";
+    standardStretch1 += ", left butt";
+    standardStretch1 += ", right ancle";
+    standardStretch1 += ", left ancle";
+    standardStretch1 += ", right chest";
+    standardStretch1 += ", left chest";
+    standardStretch1 += ", Stomach";
+    standardStretch1 += ", Back";
 
 //http://www.builtlean.com/2011/05/25/basic-stretching-exercises-routine/
-    var standardStreatch2 = "s:Name_Ex_Splitter:";
-    standardStreatch2 += "Basic Stretch Routine:Name_Ex_Splitter:";
-    standardStreatch2 += "Right Hamstring";
-    standardStreatch2 += ", left Hamstring";
-    standardStreatch2 += ", Butterfly Groin";
-    standardStreatch2 += ", right Lying Hip";
-    standardStreatch2 += ", left Lying Hip";
-    standardStreatch2 += ", right Quad";
-    standardStreatch2 += ", left Quad";
-    standardStreatch2 += ", right Calf";
-    standardStreatch2 += ", left Calf";
-    standardStreatch2 += ", right Shoulder";
-    standardStreatch2 += ", left Shoulder";
-    standardStreatch2 += ", right Triceps";
-    standardStreatch2 += ", left Triceps";
+    var standardStretch2 = "s:Name_Ex_Splitter:";
+    standardStretch2 += "Basic Stretch Routine:Name_Ex_Splitter:";
+    standardStretch2 += "Right Hamstring";
+    standardStretch2 += ", left Hamstring";
+    standardStretch2 += ", Butterfly Groin";
+    standardStretch2 += ", right Lying Hip";
+    standardStretch2 += ", left Lying Hip";
+    standardStretch2 += ", right Quad";
+    standardStretch2 += ", left Quad";
+    standardStretch2 += ", right Calf";
+    standardStretch2 += ", left Calf";
+    standardStretch2 += ", right Shoulder";
+    standardStretch2 += ", left Shoulder";
+    standardStretch2 += ", right Triceps";
+    standardStretch2 += ", left Triceps";
 
 //http://www.7-min.com/
     var standardSingle1 = "v:Name_Ex_Splitter:";
@@ -199,7 +199,7 @@ DB.indexedDB.open = function() {
         "timeStamp": t4
     });
     store.put({
-        "text": standardStreatch1,
+        "text": standardStretch1,
         "timeStamp": t3
     });
     store.put({
@@ -207,7 +207,7 @@ DB.indexedDB.open = function() {
         "timeStamp": t2
     });
     store.put({
-        "text": standardStreatch2,
+        "text": standardStretch2,
         "timeStamp": t1
     });
     store.put({
@@ -336,14 +336,14 @@ function renderTodo(row) {
     function createExArT(arr){
         // return array of ExcerciseClass-objects!
         var ret = [], 
-            streatchTime = 16,
+            stretchTime = 16,
             tenseTime = 8;
         for(var i=0; i<arr.length; i+=1){
-            ret.push( new ExcerciseClass(arr[i], streatchTime) );
+            ret.push( new ExcerciseClass(arr[i], stretchTime) );
             ret.push( new ExcerciseClass(G.TENSE, tenseTime) );
-            ret.push( new ExcerciseClass(G.STRETCH, streatchTime) );
+            ret.push( new ExcerciseClass(G.STRETCH, stretchTime) );
             ret.push( new ExcerciseClass(G.TENSE, tenseTime) );
-            ret.push( new ExcerciseClass(G.STRETCH, streatchTime) );
+            ret.push( new ExcerciseClass(G.STRETCH, stretchTime) );
             ret.push( new ExcerciseClass(G.SWITCH, 4) );
         }
         ret.pop();
@@ -429,10 +429,10 @@ function renderTodo(row) {
                 deleteClicked = false;
                 return;
             }
-            if(type === G.DOUBLE_TYPE ) startRun(name,totalTime,createExArD(aEx));
-            if(type === G.SIGNLE_TYPE ) startRun(name,totalTime,createExArS(aEx, 30, 10));
-            if(type === G.QUICK_STRETCH_TYPE ) startRun(name,totalTime,createExArS(aEx, 24, 0));
-            if(type === G.SERIOUS_STRETCH_TYPE ) startRun(name,totalTime,createExArT(aEx, 24, 0));
+            if(type === G.DOUBLE_TYPE ) startRun(type, name,totalTime,createExArD(aEx));
+            if(type === G.SIGNLE_TYPE ) startRun(type, name,totalTime,createExArS(aEx, 30, 10));
+            if(type === G.QUICK_STRETCH_TYPE ) startRun(type, name,totalTime,createExArS(aEx, 24, 0));
+            if(type === G.SERIOUS_STRETCH_TYPE ) startRun(type, name,totalTime,createExArT(aEx, 24, 0));
         })
         .append(
             $("<div>",{
@@ -595,6 +595,9 @@ PT.speak = function(text, bOverideIsRunning){
     if(PT.bOn || bOverideIsRunning){
         var msg = new SpeechSynthesisUtterance(text);
         msg.lang = 'en-US';
+        if( bOverideIsRunning ) {
+          speechSynthesis.cancel();
+        }
         speechSynthesis.speak(msg);
     }
 };
@@ -660,9 +663,20 @@ PT.countDown2 = function(aExcersice, index, callBackFunk){
 };
 
 
-var startRun = function(name, totalTime, aExcercise){
-    $('audio').attr('src', "assets/music/workoutMusic1.mp3");
+var startRun = function(type, name, totalTime, aExcercise){
+    if(type === G.DOUBLE_TYPE || type === G.SIGNLE_TYPE ){ //workout:
+      $('audio').attr('src', "assets/music/workoutMusic1.mp3");
+    } else { // stretching:
+      $('audio').attr('src', "assets/music/stretchMusic1.mp3");
+    }
     onVolumeUpdate( {target:$('#volume')[0]} );
+    
+    $('audio').on('loadeddata', function( event ){
+      var musicTime = $('audio')[0].duration;
+      if( totalTime < musicTime ) {
+        event.target.currentTime = Math.random() * (musicTime - totalTime);
+      }
+    });
 
     if( PT.bPlayMusic ) {
       $('audio')[0].play();
