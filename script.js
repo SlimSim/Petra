@@ -43,7 +43,6 @@ DB.checkIfMoreExcersisesNeadsToBeAdded = function(){
       var str = type + ":Name_Ex_Splitter:"
               + name + ":Name_Ex_Splitter:"
               + excersises;
-              console.log("str", str);
       DB.indexedDB.addTodo(str, true);
     }
     var i,
@@ -54,7 +53,6 @@ DB.checkIfMoreExcersisesNeadsToBeAdded = function(){
       chrome.storage.local.set( { 'workoutsAdded' : [] } );
       addedWorkouts = [];
     }
-    console.log("addedWorkouts", addedWorkouts);
     if( addedWorkouts.indexOf( G.LONG_STRETCH_ROUTINE ) == -1 ) {
       localAddWorkout(
         G.SERIOUS_STRETCH_TYPE,
@@ -83,7 +81,6 @@ DB.checkIfMoreExcersisesNeadsToBeAdded = function(){
         "Back extensions"
       );
     } else if( addedWorkouts.indexOf( G.CORE_WORKOUT.get ) == -1 ) {
-      console.log("adding core!!!");
       localAddWorkout(
         G.DOUBLE_TYPE,
         G.CORE_WORKOUT.get,
@@ -105,10 +102,8 @@ DB.checkIfMoreExcersisesNeadsToBeAdded = function(){
 
     chrome.storage.local.set( {'workoutsAdded' : addedWorkouts } );
     
-    console.log("reloadItems");
     if( reloadItems ) {
       setTimeout(function(){
-        console.log("reload -------------------------- ");
         DB.indexedDB.getAllTodoItems();
       }, 1000);
     }
@@ -329,8 +324,6 @@ DB.indexedDB.getAllTodoItems = function() {
 
 
 function renderTodo(row) {
-  
-  console.log("renderTodo row", row);
 
     var aText = row.text.split(":Name_Ex_Splitter:");
 
@@ -693,7 +686,6 @@ PT.countDown2 = function(aExcersice, index, callBackFunk){
 
 
 var startRun = function(type, name, totalTime, aExcercise){
-  console.log("run ->");
     if(type === G.DOUBLE_TYPE || type === G.SIGNLE_TYPE ){ //workout:
       $('audio').attr('src', "assets/music/workoutMusic1.mp3");
     } else { // stretching:
@@ -702,7 +694,6 @@ var startRun = function(type, name, totalTime, aExcercise){
     onVolumeUpdate( {target:$('#volume')[0]} );
     
     $('audio').on('loadeddata', function( event ){
-      console.log("autio on");
       var musicTime = $('audio')[0].duration;
       if( totalTime < musicTime ) {
         event.target.currentTime = Math.random() * (musicTime - totalTime);
