@@ -1,6 +1,9 @@
 var G = {};
 G.WORKOUTS_ADDED = "workoutsAdded";
+
 G.BRUTAL_DOUBLE_WORKOUT = "Brutal Double Workout";
+G.CORE_WORKOUT = {"get": "Core Workout"};
+G.LEG_WORKOUT = {"get": "Leg Workout"};
 G.LONG_STRETCH_ROUTINE = "Long Stretch Routine";
 
 G.DOUBLE_TYPE = "w";
@@ -40,6 +43,7 @@ DB.checkIfMoreExcersisesNeadsToBeAdded = function(){
       var str = type + ":Name_Ex_Splitter:"
               + name + ":Name_Ex_Splitter:"
               + excersises;
+              console.log("str", str);
       DB.indexedDB.addTodo(str, true);
     }
     var i,
@@ -50,7 +54,20 @@ DB.checkIfMoreExcersisesNeadsToBeAdded = function(){
       chrome.storage.local.set( { 'workoutsAdded' : [] } );
       addedWorkouts = [];
     }
-    if( addedWorkouts.indexOf( G.BRUTAL_DOUBLE_WORKOUT ) == -1 ) {
+    console.log("addedWorkouts", addedWorkouts);
+    if( addedWorkouts.indexOf( G.LONG_STRETCH_ROUTINE ) == -1 ) {
+      localAddWorkout(
+        G.SERIOUS_STRETCH_TYPE,
+        G.LONG_STRETCH_ROUTINE,
+        "Right quadriceps, Left quadriceps, " +
+        "Right calf, Left calf, " +
+        "Right but, Left but, " +
+        "Right sholder, Left sholder, " +
+        "Right chest, Left chest, " +
+        "Back, " +
+        "Adductors"
+      );
+    } else if( addedWorkouts.indexOf( G.BRUTAL_DOUBLE_WORKOUT ) == -1 ) {
       localAddWorkout(
         G.DOUBLE_TYPE, 
         G.BRUTAL_DOUBLE_WORKOUT, 
@@ -65,23 +82,33 @@ DB.checkIfMoreExcersisesNeadsToBeAdded = function(){
         "Leg raises, " +
         "Back extensions"
       );
-
-    }
-    if( addedWorkouts.indexOf( G.LONG_STRETCH_ROUTINE ) == -1 ) {
+    } else if( addedWorkouts.indexOf( G.CORE_WORKOUT.get ) == -1 ) {
+      console.log("adding core!!!");
       localAddWorkout(
-        G.SERIOUS_STRETCH_TYPE, 
-        G.LONG_STRETCH_ROUTINE, 
-        "Right chest, " +
-        "Left chest, " +
-        "Right butt, " +
-        "Left butt"
+        G.DOUBLE_TYPE,
+        G.CORE_WORKOUT.get,
+        "Crunches, Bicycle, " +
+        "Back extensions, Superman, " +
+        "Right side plank, Left side plank, " +
+        "Back extensions to right, Back extensions to left, " +
+        "The plank, The boat"
+      );
+    } else if( addedWorkouts.indexOf( G.LEG_WORKOUT.get ) == -1 ) {
+      localAddWorkout(
+        G.DOUBLE_TYPE,
+        G.LEG_WORKOUT.get,
+        "Right leg squat, Left leg squat, " +
+        "Toe raises on right foot, Toe raises on left foot, " +
+        "Lunges, jump squats"
       );
     }
 
     chrome.storage.local.set( {'workoutsAdded' : addedWorkouts } );
     
+    console.log("reloadItems");
     if( reloadItems ) {
       setTimeout(function(){
+        console.log("reload -------------------------- ");
         DB.indexedDB.getAllTodoItems();
       }, 1000);
     }
@@ -302,6 +329,8 @@ DB.indexedDB.getAllTodoItems = function() {
 
 
 function renderTodo(row) {
+  
+  console.log("renderTodo row", row);
 
     var aText = row.text.split(":Name_Ex_Splitter:");
 
@@ -659,11 +688,12 @@ PT.countDown2 = function(aExcersice, index, callBackFunk){
                 callBackFunk(aExcersice, index+1);
                 break;
         }
-    }, 1000);
+    }, 100);
 };
 
 
 var startRun = function(type, name, totalTime, aExcercise){
+  console.log("run ->");
     if(type === G.DOUBLE_TYPE || type === G.SIGNLE_TYPE ){ //workout:
       $('audio').attr('src', "assets/music/workoutMusic1.mp3");
     } else { // stretching:
@@ -672,6 +702,7 @@ var startRun = function(type, name, totalTime, aExcercise){
     onVolumeUpdate( {target:$('#volume')[0]} );
     
     $('audio').on('loadeddata', function( event ){
+      console.log("autio on");
       var musicTime = $('audio')[0].duration;
       if( totalTime < musicTime ) {
         event.target.currentTime = Math.random() * (musicTime - totalTime);
