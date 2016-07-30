@@ -3,11 +3,14 @@ G.WORKOUTS_ADDED = "workoutsAdded";
 
 G.BRUTAL_DOUBLE_WORKOUT = "Brutal Double Workout";
 G.CORE_WORKOUT = {"get": "Core Workout"};
+G.STANDARD_TABATA_WORKOUT = {"get": "Standard Tabata Workout"};
+G.CORE_TABATA_WORKOUT = {"get": "Core Tabata Workout"};
 G.LEG_WORKOUT = {"get": "Leg Workout"};
 G.LONG_STRETCH_ROUTINE = "Long Stretch Routine";
 
 G.DOUBLE_TYPE = "w";
 G.SIGNLE_TYPE = "v";
+G.TABATA_TYPE = "b";
 G.QUICK_STRETCH_TYPE = "s";
 G.SERIOUS_STRETCH_TYPE = "a";
 
@@ -33,6 +36,10 @@ if ('webkitIndexedDB' in window) {
 
 DB.indexedDB = {};
 
+DB.mergeTypeNameExList = function(type, name, excersises) {
+  return type + ":Name_Ex_Splitter:" + name + ":Name_Ex_Splitter:" + excersises;
+};
+
 DB.checkIfMoreExcersisesNeadsToBeAdded = function(){
   
   chrome.storage.local.get( G.WORKOUTS_ADDED, function( resp ){
@@ -40,9 +47,7 @@ DB.checkIfMoreExcersisesNeadsToBeAdded = function(){
       reloadItems = true;
 
       addedWorkouts.push ( name );
-      var str = type + ":Name_Ex_Splitter:"
-              + name + ":Name_Ex_Splitter:"
-              + excersises;
+      var str = DB.mergeTypeNameExList(type, name, excersises);
       DB.indexedDB.addTodo(str, true);
     }
     var i,
@@ -64,6 +69,12 @@ DB.checkIfMoreExcersisesNeadsToBeAdded = function(){
         "Right chest, Left chest, " +
         "Back, " +
         "Adductors"
+      );
+    } else if( addedWorkouts.indexOf( G.STANDARD_TABATA_WORKOUT.get ) == -1 ) {
+      localAddWorkout(
+        G.TABATA_TYPE,
+        G.STANDARD_TABATA_WORKOUT.get,
+        "Tabata 1"
       );
     } else if( addedWorkouts.indexOf( G.BRUTAL_DOUBLE_WORKOUT ) == -1 ) {
       localAddWorkout(
@@ -97,6 +108,14 @@ DB.checkIfMoreExcersisesNeadsToBeAdded = function(){
         "Right leg squat, Left leg squat, " +
         "Toe raises on right foot, Toe raises on left foot, " +
         "Lunges, jump squats"
+      );
+    } else if( addedWorkouts.indexOf( G.CORE_TABATA_WORKOUT.get ) == -1 ) {
+      localAddWorkout(
+        G.TABATA_TYPE,
+        G.CORE_TABATA_WORKOUT.get,
+        "Push ups, " +
+        "Crunches, " +
+        "Back extensions"
       );
     }
 
@@ -272,11 +291,34 @@ DB.indexedDB.addTodo = function(todoText, bSkippReloadTodoItems) {
   };
 };
 
-DB.indexedDB.deleteTodo = function(id) {
+DB.indexedDB.updateTodo = function( timestamp, todoText ) {
   var db = DB.indexedDB.db;
   var trans = db.transaction(["workout"], "readwrite");
   var store = trans.objectStore("workout");
 
+  var data = {
+    "text": todoText,
+    "timeStamp": timestamp
+  };
+
+  var request1 = store.delete( timestamp );
+  request1.onsuccess = function(e) {
+    var request2 = store.put( data );
+    request2.onsuccess = function(e) {};
+    request2.onerror = function(e) {
+      console.error("request2 Error Adding: ", e);
+    };
+    DB.indexedDB.getAllTodoItems();
+  };
+  request1.onerror = function(e) {
+    console.error("request1 Error Adding: ", e);
+  };
+};
+
+DB.indexedDB.deleteTodo = function(id) {
+  var db = DB.indexedDB.db;
+  var trans = db.transaction(["workout"], "readwrite");
+  var store = trans.objectStore("workout");
   var request = store.delete(id);
 
   request.onsuccess = function(e) {
@@ -337,6 +379,7 @@ function renderTodo(row) {
     /*
       G.DOUBLE_TYPE = "w";
       G.SIGNLE_TYPE = "v";
+      G.TABATA_TYPE = "b";
       G.QUICK_STRETCH_TYPE = "s";
       G.SERIOUS_STRETCH_TYPE = "a";
      * w d = double workout,
@@ -355,7 +398,21 @@ function renderTodo(row) {
         exList = aText[1];
     }
 
-    function createExArT(arr){
+    function createExArB(arr){
+        // return array of ExcerciseClass-objects!
+        var ret = [], 
+            stretchTime = 16,
+            tenseTime = 8;
+        for(var i=0; i<arr.length; i+=1){
+          for(var j=0; j<8; j++) {
+            ret.push( new ExcerciseClass(arr[i], 20) );
+            ret.push( new ExcerciseClass(G.REST, 10) );
+          }
+        }
+        ret.pop();
+        return ret;
+    }
+    function createExArT(arr) {
         // return array of ExcerciseClass-objects!
         var ret = [], 
             stretchTime = 16,
@@ -413,6 +470,8 @@ function renderTodo(row) {
         totalTime = 24 * aEx.length;
     } else if (type === G.SERIOUS_STRETCH_TYPE ) {
         totalTime = 68 * aEx.length - 4; //16*3(workout) + 2*8(pause) + 4(för byte)
+    } else if (type === G.TABATA_TYPE ) {
+      totalTime = 30 * aEx.length * 8 - 10;
     }
     var time = PT.secToDisp(totalTime);
     var deleteClicked = false;
@@ -427,6 +486,7 @@ function renderTodo(row) {
     if(type === G.SIGNLE_TYPE ) textType = "Single";
     if(type === G.QUICK_STRETCH_TYPE ) textType = "Quick Stretch";
     if(type === G.SERIOUS_STRETCH_TYPE ) textType = "Serious Stretch";
+    if(type === G.TABATA_TYPE ) textType = "Tabata";
 
     var typeClass = type + "Class";
 
@@ -455,6 +515,7 @@ function renderTodo(row) {
             if(type === G.SIGNLE_TYPE ) startRun(type, name,totalTime,createExArS(aEx, 30, 10));
             if(type === G.QUICK_STRETCH_TYPE ) startRun(type, name,totalTime,createExArS(aEx, 24, 0));
             if(type === G.SERIOUS_STRETCH_TYPE ) startRun(type, name,totalTime,createExArT(aEx, 24, 0));
+            if(type === G.TABATA_TYPE ) startRun(type, name,totalTime,createExArB(aEx));
         })
         .append(
             $("<div>",{
@@ -484,12 +545,16 @@ function renderTodo(row) {
             .append(
                 $("<input>", {
                     'type':'button',
-                    'value':'Delete',
+                    'value':'Edit',
                     class: 'btnSmallWidth'
                 })
                 .click(function(){
                   deleteClicked = true;
-                  PT.removeEx(row.timeStamp);
+                  $('#editWorkoutTimestamp').val(row.timeStamp);
+                  $('#editWorkoutName').val(name);
+                  $('#editWorkoutList').val(exList);
+                  $('#editWorkoutType').val(type);
+                  $('#editPopup').removeClass('hidden');
                 })
             )
         )
@@ -502,9 +567,7 @@ function renderTodo(row) {
 function addWorkout(type) {
   var excersises = $('#workout').val();
   var name = $('#workName').val();
-  var str = type + ':Name_Ex_Splitter:'
-          + name + ":Name_Ex_Splitter:"
-          + excersises;
+  var str = DB.mergeTypeNameExList(type, name, excersises);
   DB.indexedDB.addTodo(str);
   $('#workout').val("");  // resetting the input field:
   $('#workName').val("");
@@ -541,7 +604,7 @@ PT.main = function(){
       $target.addClass( 'selected' );
       
       $('#todoItems').removeClass(
-        "showAll showWorkout showStretch showWClass showVClass showSClass showAClass"
+        "showAll showWorkout showStretch showWClass showVClass showSClass showAClass showBClass"
       ).addClass( $target.attr("workoutType") );
       o[ G.WORKOUT_TYPE ] = $target.attr("workoutType");
       chrome.storage.local.set( o );
@@ -556,6 +619,9 @@ PT.main = function(){
     $('#addSingleWorkoutButt').click(function(){
         addWorkout( G.SIGNLE_TYPE );
     });
+    $('#addTabataWorkoutButt').click(function(){
+        addWorkout( G.TABATA_TYPE );
+    });
     $('#addStretchButt').click(function(){
         addWorkout( G.QUICK_STRETCH_TYPE );
     });
@@ -563,6 +629,36 @@ PT.main = function(){
         addWorkout( G.SERIOUS_STRETCH_TYPE );
     });
     $('#contribute_0').click(PT.purchase);
+    $('#editWorkoutCancel').click( editWorkoutReset );
+    $('#editWorkoutDelete').click( function( event ){
+      var timeStamp = parseInt( $('#editWorkoutTimestamp').val() );
+      IO.confirm(
+        "Are you sure?",
+        "Do you want to remove this exercise? This action can not be undone",
+        function(){
+          DB.indexedDB.deleteTodo( timeStamp );
+          editWorkoutReset();
+        });
+    });
+    
+    
+    $('#editWorkoutSave').click(function(){
+      var timestamp = parseInt($('#editWorkoutTimestamp').val()),
+          name = $('#editWorkoutName').val(),
+          exList = $('#editWorkoutList').val(),
+          type = $('#editWorkoutType').val();
+      DB.indexedDB.updateTodo(timestamp, DB.mergeTypeNameExList(type, name, exList));
+      
+      editWorkoutReset();
+    });
+    
+    function editWorkoutReset() {
+      $('#editWorkoutTimestamp').val("");
+      $('#editWorkoutName').val("");
+      $('#editWorkoutList').val("");
+      $('#editWorkoutType').val("");
+      $('#editPopup').addClass('hidden');
+    }
 
     
     chrome.storage.local.get( G.WORKOUT_TYPE, function( resp ){
@@ -586,17 +682,6 @@ PT.main = function(){
     });
     
 };
-
-PT.removeEx = function(rowTimeStamp){
-  IO.confirm(
-    "Are you sure?",
-    "Do you want to remove this exercise? This action can not be undone",
-    function(){
-      DB.indexedDB.deleteTodo(rowTimeStamp);
-    });
-
-};
-
 
 PT.stopExcersise = function(){
     PT.clearCounter();
@@ -635,8 +720,6 @@ PT.countDown2 = function(aExcersice, index, callBackFunk){
     var seconds = aExcersice[index].seconds;
 
     var halfTime = ""+ Math.ceil(seconds / 2);
-
-//    console.log("aExcersise[index+1]:", aExcersice[index+1]);
 
     var nextExcersise = "Freedom!";
     if(aExcersice[index+1]) nextExcersise = aExcersice[index+1].name;
@@ -681,7 +764,7 @@ PT.countDown2 = function(aExcersice, index, callBackFunk){
                 callBackFunk(aExcersice, index+1);
                 break;
         }
-    }, 100);
+    }, 1000 );
 };
 
 

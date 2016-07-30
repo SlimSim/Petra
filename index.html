@@ -85,6 +85,7 @@
       <input workoutType="showAll" class="selected" type=button value="All"/>
       <input workoutType="showWorkout" type=button value="Workouts"/>
       <input workoutType="showStretch" type=button value="Stretch"/>
+      <input workoutType="showBClass" type=button value="Tabata Workouts"/>
       <input workoutType="showWClass" type=button value="Double Workouts"/>
       <input workoutType="showVClass" type=button value="Single Workouts"/>
       <input workoutType="showAClass" type=button value="Serious stretch"/>
@@ -129,6 +130,10 @@
         id="addSingleWorkoutButt"/>
       <input
         type="button"
+        value="Tabata workout"
+        id="addTabataWorkoutButt"/>
+      <input
+        type="button"
         value="Serious stretching"
         id="addSeriousStretchButt"/>
       <input
@@ -142,7 +147,35 @@
     </div>
 
 
+  <div id="editPopup" class="outerDiv hidden">
+    <div class="innerDiv">
+      <h1>Edit workout</h1>
+      <input type="hidden" id="editWorkoutTimestamp" />
+      <div class="flexRow"><p>Workout name:</p><input id="editWorkoutName" /> </div>
+      <div class="flexRow"><p>Workout list:</p><textarea id="editWorkoutList" ></textarea> </div>
+      <div class="flexRow">
+        <p>Workout type:</p>
+        <select id="editWorkoutType">
+          <option value="w">Double workout</option>
+          <option value="v">Single workout</option>
+          <option value="b">Tabata workout</option>
+          <option value="a">Serious stretch</option>
+          <option value="s">Quick stretch</option>
+        </select>
+      </div>
+      <div class="flexRow">
+        <p>Delete workout:</p>
+        <input type="button" id="editWorkoutDelete" value="Delete" />
+      </div>
+      <div class="flexRow">
+        <input type="button" value="Cancel" id="editWorkoutCancel" />
+        <div class="flexOne" ></div>
+        <input type="button" value="Save" id="editWorkoutSave" />
+      </div>
+      
 
+    </div>
+  </div>
 
 
 
