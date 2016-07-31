@@ -2,7 +2,7 @@
   "name": "Petra - TEST Personal trainer!",
   "short_name": "Petra TEST",
   "description": "This app will help you with your workouts! Simply start a workout and Petra will tell you what excercise to do and for how long.",
-  "version": "1",
+  "version": "1.0.3",
   "offline_enabled": true,
   "android": true,
   "manifest_version": 2,
