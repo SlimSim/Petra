@@ -402,12 +402,26 @@ function renderTodo(row) {
         // return array of ExcerciseClass-objects!
         var ret = [], 
             stretchTime = 16,
+            tabataLength = 20,
+            restLength = 10,
             tenseTime = 8;
         for(var i=0; i<arr.length; i+=1){
-          for(var j=0; j<8; j++) {
-            ret.push( new ExcerciseClass(arr[i], 20) );
-            ret.push( new ExcerciseClass(G.REST, 10) );
-          }
+            ret.push( new ExcerciseClass("The first " + arr[i], tabataLength) );
+            ret.push( new ExcerciseClass(G.REST, restLength) );
+            ret.push( new ExcerciseClass("The second " + arr[i], tabataLength) );
+            ret.push( new ExcerciseClass(G.REST, restLength) );
+            ret.push( new ExcerciseClass("The third " + arr[i], tabataLength) );
+            ret.push( new ExcerciseClass(G.REST, restLength) );
+            ret.push( new ExcerciseClass("The fourth " + arr[i], tabataLength) );
+            ret.push( new ExcerciseClass(G.REST, restLength) );
+            ret.push( new ExcerciseClass("The fifth " + arr[i], tabataLength) );
+            ret.push( new ExcerciseClass(G.REST, restLength) );
+            ret.push( new ExcerciseClass("The sixth " + arr[i], tabataLength) );
+            ret.push( new ExcerciseClass(G.REST, restLength) );
+            ret.push( new ExcerciseClass("The seventh " + arr[i], tabataLength) );
+            ret.push( new ExcerciseClass(G.REST, restLength) );
+            ret.push( new ExcerciseClass("The eight " + arr[i], tabataLength) );
+            ret.push( new ExcerciseClass(G.REST, restLength) );
         }
         ret.pop();
         return ret;
@@ -764,12 +778,12 @@ PT.countDown2 = function(aExcersice, index, callBackFunk){
                 callBackFunk(aExcersice, index+1);
                 break;
         }
-    }, 1000 );
+    }, 100 );
 };
 
 
 var startRun = function(type, name, totalTime, aExcercise){
-    if(type === G.DOUBLE_TYPE || type === G.SIGNLE_TYPE ){ //workout:
+    if(type === G.DOUBLE_TYPE || type === G.SIGNLE_TYPE || type === G.TABATA_TYPE ){ //workout:
       $('audio').attr('src', "assets/music/workoutMusic1.mp3");
     } else { // stretching:
       $('audio').attr('src', "assets/music/stretchMusic1.mp3");
@@ -818,7 +832,7 @@ var run = function(aExcercise, index){
 
         if(aExcercise[index+1]){
           firstFrase = "Then we'll do some ";
-          if(aExcercise[index].name.substring(0, 3).toUpperCase() == "THE")
+          if(aExcercise[index+1].name.substring(0, 3).toUpperCase() == "THE")
               firstFrase = "Then we'll do ";
           PT.speak(firstFrase + aExcercise[index+1].name);
 
