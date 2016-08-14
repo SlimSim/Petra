@@ -778,7 +778,7 @@ PT.countDown2 = function(aExcersice, index, callBackFunk){
                 callBackFunk(aExcersice, index+1);
                 break;
         }
-    }, 100 );
+    }, 1000 );
 };
 
 
