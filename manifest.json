@@ -1,10 +1,9 @@
 {
-  "name": "Petra - TEST Personal trainer!",
-  "short_name": "Petra TEST",
-  "description": "This app will help you with your workouts! Simply start a workout and Petra will tell you what excercise to do and for how long.",
-  "version": "1.0.5",
+  "name": "Petra - Unsupported - Personal trainer!",
+  "short_name": "Petra Unsupported",
+  "description": "This version is no longer supported, use petra.slimsim.heliohost.org/ instead! Petra will tell you what to do with your workouts!",
+  "version": "1.0.7",
   "offline_enabled": true,
-  "android": true,
   "manifest_version": 2,
   "app": {
     "background": {

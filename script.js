@@ -262,7 +262,7 @@ DB.indexedDB.open = function() {
   request.onsuccess = function(e) {
     DB.indexedDB.db = e.target.result;
     DB.indexedDB.getAllTodoItems();
-    DB.checkIfMoreExcersisesNeadsToBeAdded();
+    //DB.checkIfMoreExcersisesNeadsToBeAdded();
   };
 
   request.onerror = DB.indexedDB.onerror;
@@ -1011,6 +1011,11 @@ var toggleMusicOnOff = function( event ) {
 };
 
 $( document ).ready(function(){
+
+	$( "#dismisNewVersionModal" ).on( "click", function() {
+		$( "#newVersionModal" ).remove();
+	});
+
     DB.indexedDB.open();
     PT.main();
     document.addEventListener('keydown', IO.keyboardKeydown);
